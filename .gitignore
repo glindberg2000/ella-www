@@ -1,0 +1,66 @@
+# Ignore environment files
+sendgrid.env
+ella-web
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environment
+venv/
+env/
+.env/
+.venv/
+
+# Ignore node modules and package-lock.json
+node_modules/
+package-lock.json
+
+# Ignore log files
+*.log
+
+# Ignore IDE configuration files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Windows system files
+Thumbs.db
+
+# Ignore other common sensitive files
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Ignore database files
+*.sqlite3
+
+# Ignore build and distribution files
+dist/
+build/
+
+# Ignore compiled files
+*.o
+*.so
+*.dll
+*.exe
+
+# Ignore other cache files
+.cache/
+
+# Ignore other common files
+*.orig
+*.rej
+*.bak
+*.swp
+*.swo
