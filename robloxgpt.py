@@ -5,7 +5,8 @@ import os
 import logging
 from openai import OpenAI
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("ella_app")
+
 router = APIRouter()
 
 class ChatMessage(BaseModel):
@@ -16,11 +17,15 @@ class ChatMessage(BaseModel):
 
 @router.post("/robloxgpt")
 async def chatgpt_endpoint(chat_message: ChatMessage, request: Request):
+    logger.info(f"Received request to /robloxgpt endpoint")
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
     if not OPENAI_API_KEY:
         logger.error("OpenAI API key not found")
-        return JSONResponse({"message": "OpenAI API key not found"}, status_code=500)
-    
+        return JSONResponse(
+            status_code=500,
+            content={"message": "OpenAI API key not found"}
+        )
+
     client = OpenAI(api_key=OPENAI_API_KEY)
 
     # Enhanced prompt to ensure a natural conversational style with a wizard backstory
@@ -38,6 +43,7 @@ async def chatgpt_endpoint(chat_message: ChatMessage, request: Request):
     logger.info(f"Received message from {request.client.host}: {chat_message.message}, Player ID: {chat_message.player_id}, NPC ID: {chat_message.npc_id}, Limit: {chat_message.limit}")
 
     try:
+        logger.info("Sending request to OpenAI API")
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}]
@@ -46,6 +52,9 @@ async def chatgpt_endpoint(chat_message: ChatMessage, request: Request):
         logger.info(f"AI response: {ai_response}")
     except Exception as e:
         logger.error(f"Error interacting with ChatGPT: {e}")
-        return JSONResponse({"message": "Failed to interact with ChatGPT"}, status_code=500)
+        return JSONResponse(
+            status_code=500,
+            content={"message": "Failed to interact with ChatGPT"}
+        )
 
     return JSONResponse({"message": ai_response})

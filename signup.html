@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ella AI Chatbot Interaction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .message {
+            margin: 10px 0;
+        }
+        .message.user {
+            text-align: right;
+        }
+        .message .text {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 70%;
+        }
+        .message.bot .text {
+            background-color: #e0e0e0;
+            color: #000;
+        }
+        .message.user .text {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .terms-container {
+            margin: 20px 0;
+        }
+        iframe {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-container input {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="message bot">
+            <div class="text">Hi there! Would you like to interface via SMS for receiving updates and communications from Ella AI Care?</div>
+        </div>
+        <div class="message user">
+            <div class="text">Yes</div>
+        </div>
+        <div class="terms-container">
+            <h3>Terms & Conditions</h3>
+            <iframe src="https://www.ella-ai-care.com/terms.html" title="Terms & Conditions"></iframe>
+        </div>
+        <div class="checkbox-container">
+            <input type="checkbox" id="acceptTerms">
+            <label for="acceptTerms">I have read and accept the Terms & Conditions</label>
+        </div>
+    </div>
+</body>
+</html>

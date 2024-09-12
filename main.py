@@ -1,7 +1,5 @@
 import logging
-
-logging.basicConfig(level=logging.INFO)
-
+from logging.handlers import RotatingFileHandler
 from fastapi import FastAPI, Form, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
@@ -10,12 +8,30 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import os
 
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("ella_app")
+
+# Add file handler
+file_handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=3)
+file_handler.setLevel(logging.INFO)
+file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(file_formatter)
+logger.addHandler(file_handler)
+
+# Add console handler
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+console_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(console_formatter)
+logger.addHandler(console_handler)
+
 app = FastAPI()
 
 # Health check endpoint
 @app.get("/api/health")
 def health_check():
-    logging.info("Health check endpoint called")
+    logger.info("Health check endpoint called")
     return {"status": "ok"}
 
 # Dummy post endpoint
