@@ -29,8 +29,8 @@ class EnhancedChatMessageV3(BaseModel):
     limit: int = 200  # Default limit of characters
 
 class NPCAction(BaseModel):
-    type: Literal["speak", "emote", "move", "follow", "unfollow"]
-    data: Optional[Dict[str, Any]] = None
+    type: Literal["follow", "unfollow", "none"]
+    data: Optional[Dict[str, Any]] = None  # Since follow/unfollow have no associated data
 
 class NPCResponseV3(BaseModel):
     message: str
@@ -38,26 +38,28 @@ class NPCResponseV3(BaseModel):
     internal_state: Optional[Dict[str, Any]] = None
 
 # JSON Schema for Structured Output
+# Revised JSON Schema for Structured Output
+# Simplified JSON Schema for Structured Output (no emote)
 NPC_RESPONSE_SCHEMA = {
-    "name": "npc_response",
     "type": "object",
     "properties": {
         "message": {"type": "string"},
         "action": {
             "type": "object",
             "properties": {
-                "type": {"type": "string", "enum": ["speak", "emote", "move", "follow", "unfollow"]},
-                "data": {"type": "object"}
+                "type": {
+                    "type": "string",
+                    "enum": ["follow", "unfollow", "none"]  # Only follow, unfollow, and none actions
+                }
             },
-            "required": ["type"],
-            "additionalProperties": False  # Ensures no extra properties are allowed in the 'action' object
+            "required": ["type"],  # Only 'type' is required
+            "additionalProperties": False  # No additional properties allowed
         },
-        "internal_state": {"type": "object"}
+        "internal_state": {"type": "object"}  # Internal state remains as a generic object
     },
-    "required": ["message", "action"],  # Both 'message' and 'action' are now required
-    "additionalProperties": False  # Ensures no extra properties are allowed in the overall object
+    "required": ["message", "action"],  # Message and action are required
+    "additionalProperties": False  # No additional properties allowed in the top-level object
 }
-
 
 
 class ConversationManager:
