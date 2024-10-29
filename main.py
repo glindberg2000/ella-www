@@ -7,8 +7,12 @@ from pydantic import EmailStr
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import os
+from dotenv import load_dotenv
 
-# Set up logging
+# Load environment variables
+load_dotenv('/home/plato/dev/ella_www/sendgrid.env')
+
+# Enhanced logging setup
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ella_app")
 
@@ -45,30 +49,31 @@ async def dummy_post(name: str = Form(...), email: str = Form(...), message: str
 async def send_email(name: str = Form(...), email: EmailStr = Form(...), message: str = Form(...)):
     SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
     if not SENDGRID_API_KEY:
-        return JSONResponse({"message": "SendGrid API key not found"}, status_code=500)
+        logger.error("SendGrid API key not found in environment variables")
+        return JSONResponse({"message": "SendGrid API key not configured"}, status_code=500)
     
-    mail = Mail(
-        from_email='info@ella-ai-care.com',
-        to_emails='realcryptoplato@gmail.com',
-        subject='New Contact Form Submission',
-        html_content=f"""
-        <strong>New contact form submission</strong><br>
-        <strong>Name:</strong> {name}<br>
-        <strong>Email:</strong> {email}<br>
-        <strong>Message:</strong> {message}
-        """
-    )
-
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
+        mail = Mail(
+            from_email='info@ella-ai-care.com',
+            to_emails='realcryptoplato@gmail.com',
+            subject='New Contact Form Submission',
+            html_content=f"""
+            <strong>New contact form submission</strong><br>
+            <strong>Name:</strong> {name}<br>
+            <strong>Email:</strong> {email}<br>
+            <strong>Message:</strong> {message}
+            """
+        )
         response = sg.send(mail)
+        logger.info(f"Email sent successfully. Status code: {response.status_code}")
+        return JSONResponse({"message": "Email sent successfully"})
     except Exception as e:
-        return JSONResponse({"message": "Failed to send email"}, status_code=500)
-    
-    return JSONResponse({"message": "Email sent successfully"})
+        logger.error(f"Failed to send email: {str(e)}")
+        return JSONResponse({"message": f"Failed to send email: {str(e)}"}, status_code=500)
 
 # Import and include the ChatGPT router
-from robloxgpt import router as chatgpt_router
+from robloxgpt_bak import router as chatgpt_router
 app.include_router(chatgpt_router)
 
 # Serve static files from the 'ella_www' directory after defining API routes

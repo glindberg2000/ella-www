@@ -1,0 +1,15 @@
+[Unit]
+Description=Ella Web FastAPI Application
+After=network.target
+
+[Service]
+User=plato
+Group=plato
+WorkingDirectory=/home/plato/dev/ella_www
+Environment=PATH=/home/plato/dev/ella_www/ella-web/bin:$PATH
+EnvironmentFile=/home/plato/dev/ella_www/sendgrid.env
+ExecStart=/home/plato/dev/ella_www/ella-web/bin/uvicorn main:app --host 0.0.0.0 --port 8000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target 
