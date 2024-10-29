@@ -10,19 +10,14 @@
     <meta charset="utf-8" />
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
     <link href="icons/tHQsIBUToXAhlMN5KolBIiT6LbKauPQ8ie8rzDj4.png" rel="icon" sizes="32x32" type="image/png" />
-    <link href="https://assets.ycodeapp.com/assets/app36711/webclips/1KSvE5VpYXlrfOJPTOJulx9IZPCMd3jDsDN5vrA3.png"
-        rel="apple-touch-icon" sizes="256x256" />
+    <link href="icons/tHQsIBUToXAhlMN5KolBIiT6LbKauPQ8ie8rzDj4.png" rel="apple-touch-icon" sizes="256x256" />
     <link href="css/ycode-generated.css" rel="stylesheet" />
     <link href="css/main.css" rel="stylesheet" />
     <link href="http://www.ella-ai-care.com" rel="canonical" />
     <title>Ella AI</title>
     <meta content="Ella AI" name="description" />
-    <meta
-        content="https://assets.ycodeapp.com/assets/app36711/Images/GhvA0exmTCHSj16pLBlNS6QjzHQmzsPzxAEZ254W-published.jpg"
-        property="og:image" />
-    <meta
-        content="https://assets.ycodeapp.com/assets/app36711/Images/GhvA0exmTCHSj16pLBlNS6QjzHQmzsPzxAEZ254W-published.jpg"
-        property="twitter:image" />
+    <meta content="images/m0zzy1lkeqfpWYa3une0Je9ZNC39gJKAi7wPejzp-published.jpg" property="og:image" />
+    <meta content="images/m0zzy1lkeqfpWYa3une0Je9ZNC39gJKAi7wPejzp-published.jpg" property="twitter:image" />
     <meta content="summary_large_image" name="twitter:card" />
     <meta content="Ella AI" property="og:title" />
     <meta content="Ella AI" property="twitter:title" />
@@ -30,6 +25,118 @@
     <meta content="Ella AI" property="twitter:description" />
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- Add this CSS in your head section -->
+    <style>
+        /* Optional loading spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #f8f9fa;
+        }
+
+        .video-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23000000"><path d="M8 5v14l11-7z"/></svg>');
+            background-size: contain;
+            opacity: 0.2;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+
+    <!-- Update your form with an ID and add the spinner -->
+    <form id="contactForm" onsubmit="handleSubmit(event)">
+        <!-- Your existing form fields -->
+        <div class="spinner" id="submitSpinner"></div>
+    </form>
+
+    <!-- Replace the existing form submission script with this updated version -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configure toastr options
+            toastr.options = {
+                "closeButton": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "5000"
+            };
+
+            const form = document.querySelector('form[action="/send-email"]');
+            
+            if (form) {
+                form.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                        submitButton.innerHTML = '<span>Sending...</span>';
+                    }
+
+                    try {
+                        const response = await fetch('/send-email', {
+                            method: 'POST',
+                            body: new FormData(form)
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            toastr.success('Message sent successfully! We\'ll get back to you soon.');
+                            form.reset();
+                        } else {
+                            toastr.error(data.detail || 'Failed to send message. Please try again.');
+                        }
+                    } catch (error) {
+                        toastr.error('An error occurred while sending the message.');
+                        console.error('Error:', error);
+                    } finally {
+                        if (submitButton) {
+                            submitButton.disabled = false;
+                            submitButton.innerHTML = '<span>Send message</span>';
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </head>
 
 <body class="min-h-[100%] font-manrope bg-opacity-[100%] bg-[#f0f8ff]">
@@ -91,11 +198,15 @@
                 <div
                     class="mr-[auto] ml-[auto] pr-[32px] pl-[32px] md:pr-[24px] md:pl-[24px] max-w-[1536px] rounded-[12px] bg-opacity-[100%] bg-[#f0f8ff]">
                     <div class="transform">
-                        <div class="rounded-[12px] transform overflow-visible visible">
-                            <video class="rounded-[12px] block transform border-[0px] border-none visible z-[100]"
-                                controls="" data-animation-id-42rphhumt="" data-animation-while-scrolling="42rphhumt"
-                                poster="https://assets.ycodeapp.com/assets/app36711/Images/5PUV1CPjeEZo1vMc0I05uoHBNWqHg5jXqrwXd8eu-published.png"
-                                src="videos/h6JovubvZeicCeQTZT4Ywkd7ooCcjB2FekfkwXEO-published.mp4"></video>
+                        <div class="video-container rounded-[12px] transform overflow-visible visible">
+                            <iframe 
+                                class="rounded-[12px] absolute top-0 left-0 w-full h-full"
+                                src="https://www.youtube.com/embed/iWkrhdz21bw?si=Hy5_wXwCilUSRhPL"
+                                title="Ella AI Video"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen>
+                            </iframe>
                         </div>
                     </div>
                 </div>
@@ -114,7 +225,7 @@
                                                 class="text-[48px] text-[black] leading-[1.1] font-bold tracking-[-0.025em] sm:text-[36px] text-left">
                                                 Transforming Alzheimer's Care with Compassionate AI Assistants</h1>
                                             <p class="text-[20px] text-[black] text-opacity-[50%] text-left">Ella AI is
-                                                not just an AI assistant; it's a breakthrough in Alzheimer’s care,
+                                                not just an AI assistant; it's a breakthrough in Alzheimer's care,
                                                 offering a unique blend of cognitive support, emotional companionship,
                                                 and practical assistance. With its ability to engage in memory-enhancing
                                                 conversations, provide tailored reminders for daily routines, and
@@ -197,9 +308,9 @@
                                     Alzheimer's patients. These activities range from simple memory games to more
                                     complex puzzles, all tailored to the individual's cognitive level and preferences.
                                     By regularly engaging in these exercises, patients can experience benefits in memory
-                                    retention and cognitive agility. Ella AI’s adaptive learning algorithm ensures that
+                                    retention and cognitive agility. Ella AI's adaptive learning algorithm ensures that
                                     these exercises are not only personalized but also evolve in complexity and variety
-                                    based on the patient’s responses and progress.Incorporating these cognitive
+                                    based on the patient's responses and progress.Incorporating these cognitive
                                     exercises into daily routines can be therapeutic, helping to maintain mental acuity
                                     and providing a sense of achievement and normalcy for patients.</p>
                             </div>
@@ -216,10 +327,10 @@
                                 <h2 class="text-[36px] font-bold tracking-[-0.025em] leading-[1.25em] mb-[20px]"><strong
                                         class="" yc-builder-id="j5yqose66">Gentle Daily Reminders</strong></h2>
                                 <p class="text-[20px] text-[black] text-opacity-[50%] text-left max-w-[480px]">Ella AI
-                                    serves as more than a technological aid; it’s a compassionate companion, providing
+                                    serves as more than a technological aid; it's a compassionate companion, providing
                                     gentle daily reminders and nurturing emotional connections. This feature is crucial
                                     in supporting Alzheimer's patients with their everyday routines and medication
-                                    schedules. Understanding each patient’s schedule, Ella AI offers timely reminders
+                                    schedules. Understanding each patient's schedule, Ella AI offers timely reminders
                                     for medications, appointments, and daily activities. These reminders are tailored to
                                     individual needs, ensuring they are effective and supportive. Ella AI also engages
                                     in conversations about past events and cherished memories. This not only stimulates
@@ -258,11 +369,11 @@
                                     stands out with its ability to proactively interact with Alzheimer's patients,
                                     offering more than just responsive assistance. It initiates meaningful conversations
                                     and check-ins, fostering a sense of companionship. Through its multi-modal
-                                    communication capabilities, Ella AI can initiate interactions based on the patient’s
+                                    communication capabilities, Ella AI can initiate interactions based on the patient's
                                     routine, preferences, or specific cues. This keeps the patients engaged, connected,
                                     and mentally active. While Ella AI helps with daily tasks, its proactive nature
                                     means it also focuses on the emotional and social needs of patients, providing a
-                                    more holistic approach to care. Ella AI’s dialogues are not just scripted responses
+                                    more holistic approach to care. Ella AI's dialogues are not just scripted responses
                                     but are adaptively generated to suit the mood, preferences, and history of each
                                     patient, making every interaction feel personal and meaningful.</p>
                             </div>
@@ -367,7 +478,7 @@
                                     emergency, Ella AI can initiate an immediate response, ensuring that help is on the
                                     way when it's most needed. This rapid reaction can be crucial in preventing serious
                                     consequences. Caregivers can customize alert settings based on specific needs and
-                                    preferences, ensuring that Ella AI’s response aligns with the patient's unique care
+                                    preferences, ensuring that Ella AI's response aligns with the patient's unique care
                                     plan. The emergency alert feature provides families and caregivers with an added
                                     layer of security, knowing that their loved ones are continually monitored and
                                     assistance is readily available.</p>
@@ -458,31 +569,6 @@
                                 </button>
                             </div>
                         </form>
-
-                        <script>
-                            document.getElementById("contact-form").addEventListener("submit", async function (event) {
-                                event.preventDefault();
-
-                                const formData = new FormData(this);
-
-                                try {
-                                    const response = await fetch(this.action, {
-                                        method: this.method,
-                                        body: formData
-                                    });
-
-                                    const result = await response.json();
-
-                                    if (response.ok) {
-                                        toastr.success(result.message);
-                                    } else {
-                                        toastr.error(result.message);
-                                    }
-                                } catch (error) {
-                                    toastr.error("An error occurred while sending the message.");
-                                }
-                            });
-                        </script>
                     </div>
                 </div>
             </section>
@@ -621,7 +707,11 @@
     <script>window.animations = { "jj6sw6m0i": [], "42rphhumt": [{ "layerUid": "42rphhumt", "triggerEl": "42rphhumt", "properties": { "name": "scale", "delay": "0", "easing": null, "toUnit": "-", "toValue": "1.15", "duration": "0.5", "fromUnit": null, "fromValue": "1", "smoothing": "1", "offsetUnit": "%", "offsetValue": "50", "scrollReset": "once", "elEndPosition": "bottom", "offsetEndUnit": "%", "offsetEndValue": "100", "elStartPosition": "top" }, "animationId": "wjfi76pdn", "triggerType": "while-scrolling" }], "ljkcmvkrl": [{ "layerUid": "ljkcmvkrl", "triggerEl": "ljkcmvkrl", "properties": { "loop": "none", "name": "scale", "delay": "0", "easing": "ease in out", "toUnit": "-", "toValue": "1.02", "duration": "0.2", "fromUnit": null, "fromValue": "1" }, "animationId": "b4irfv80z", "triggerType": "hover" }], "weilbpkl5": [{ "layerUid": "weilbpkl5", "triggerEl": "etw25u2wf", "properties": { "loop": "none", "name": "move", "delay": "0.1", "easing": "ease in out", "toUnit": "px", "toUnit2": "PX", "toValue": "0", "duration": "0.3", "fromUnit": "px", "toValue2": "0", "fromUnit2": "PX", "fromValue": "0", "fromValue2": "-40" }, "animationId": "eskk76nam", "triggerType": "click" }, { "layerUid": "weilbpkl5", "triggerEl": "etw25u2wf", "properties": { "loop": "none", "name": "opacity", "delay": "0.1", "easing": "ease in out", "toUnit": "%", "toValue": "100", "duration": "0.3", "fromUnit": "%", "fromValue": "0" }, "animationId": "gxztr34w9", "triggerType": "click" }] }</script>
     <script>window.sliderSettings = []</script>
     <script>window.showHideElements = { "mobile-menu": false, "button-omiv7n27n": true, "ldscw5qrb": false, "Get-in-touch": true, "submit-thanks": false, "om2658p5i": false, "Send-Message": true }</script>
-    <script>window.pageWorkflowActions = { "login-submit-button": { "workflow_uid": "63ee0404ce825", "actions": [{ "id": null, "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "login-submit-button" }] }, { "id": null, "order": 2, "const": "SUBMIT_FORM", "properties": [] }] }, "signup-submit-button": { "workflow_uid": "63ee0404d2792", "actions": [{ "id": null, "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "signup-submit-button" }] }, { "id": null, "order": 2, "const": "SUBMIT_FORM", "properties": [] }] }, "reset-password-submit-button": { "workflow_uid": "63ee0404d5034", "actions": [{ "id": null, "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "reset-password-submit-button" }] }, { "id": null, "order": 2, "const": "SUBMIT_FORM", "properties": [] }] }, "set-new-password-submit-button": { "workflow_uid": "63ee0404d7a09", "actions": [{ "id": null, "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "set-new-password-submit-button" }] }, { "id": null, "order": 2, "const": "SUBMIT_FORM", "properties": [] }] }, "toggle-mobile-menu": { "workflow_uid": "63ef28e717fd2", "actions": [{ "id": null, "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "toggle-mobile-menu" }] }, { "id": null, "order": 2, "const": "TOGGLE_ELEMENT", "properties": [{ "const": "ELEMENT_IDS", "value": ["mobile-menu"] }] }] }, "Send-Message": { "workflow_uid": "65ab1b59a7a26", "actions": [{ "id": "xhdnbtmop", "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "Send-Message" }] }, { "id": "f5d1l4sqn", "order": 2, "const": "SUBMIT_FORM", "properties": [] }, { "id": "pibiiyabv", "order": 3, "const": "SHOW_ELEMENT", "properties": [{ "const": "ELEMENT_IDS", "value": ["submit-thanks"] }] }] }, "button-omiv7n27n": { "workflow_uid": "65ab22aeb4a68", "actions": [{ "id": "rh7j940wi", "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "button-omiv7n27n" }] }] } }</script>
+    <script>window.pageWorkflowActions = {
+            "login-submit-button": {
+                "workflow_uid": "63ee0404ce825", "actions": [{ "id": null, "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "login-submit-button" }] }, "signup-submit-button": {
+                    "workflow_uid": "63ee0404d2792", "actions": [{ "id": null, "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "signup-submit-button" }] }, "reset-password-submit-button": {
+                        "workflow_uid": "63ee0404d5034", "actions": [{ "id": null, "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "reset-password-submit-button" }] }, "set-new-password-submit-button": { "workflow_uid": "63ee0404d7a09", "actions": [{ "id": null, "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "set-new-password-submit-button" }] }, { "id": null, "order": 2, "const": "SUBMIT_FORM", "properties": [] }] }, "toggle-mobile-menu": { "workflow_uid": "63ef28e717fd2", "actions": [{ "id": null, "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "toggle-mobile-menu" }] }, "Send-Message": { "workflow_uid": "65ab1b59a7a26", "actions": [{ "id": "xhdnbtmop", "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "Send-Message" }] }, { "id": "f5d1l4sqn", "order": 2, "const": "SUBMIT_FORM", "properties": [] }, { "id": "pibiiyabv", "order": 3, "const": "SHOW_ELEMENT", "properties": [{ "const": "ELEMENT_IDS", "value": ["submit-thanks"] }] }] }, "button-omiv7n27n": { "workflow_uid": "65ab22aeb4a68", "actions": [{ "id": "rh7j940wi", "order": 1, "const": "CLICK", "properties": [{ "const": "ELEMENT_ID", "value": "button-omiv7n27n" }] }] }</script>
     <script
         class="dataScript">window.animations = { "jj6sw6m0i": [], "42rphhumt": [{ "layerUid": "42rphhumt", "triggerEl": "42rphhumt", "properties": { "name": "scale", "delay": "0", "easing": null, "toUnit": "-", "toValue": "1.15", "duration": "0.5", "fromUnit": null, "fromValue": "1", "smoothing": "1", "offsetUnit": "%", "offsetValue": "50", "scrollReset": "once", "elEndPosition": "bottom", "offsetEndUnit": "%", "offsetEndValue": "100", "elStartPosition": "top" }, "animationId": "wjfi76pdn", "triggerType": "while-scrolling" }], "ljkcmvkrl": [{ "layerUid": "ljkcmvkrl", "triggerEl": "ljkcmvkrl", "properties": { "loop": "none", "name": "scale", "delay": "0", "easing": "ease in out", "toUnit": "-", "toValue": "1.02", "duration": "0.2", "fromUnit": null, "fromValue": "1" }, "animationId": "b4irfv80z", "triggerType": "hover" }], "weilbpkl5": [{ "layerUid": "weilbpkl5", "triggerEl": "etw25u2wf", "properties": { "loop": "none", "name": "move", "delay": "0.1", "easing": "ease in out", "toUnit": "px", "toUnit2": "PX", "toValue": "0", "duration": "0.3", "fromUnit": "px", "toValue2": "0", "fromUnit2": "PX", "fromValue": "0", "fromValue2": "-40" }, "animationId": "eskk76nam", "triggerType": "click" }, { "layerUid": "weilbpkl5", "triggerEl": "etw25u2wf", "properties": { "loop": "none", "name": "opacity", "delay": "0.1", "easing": "ease in out", "toUnit": "%", "toValue": "100", "duration": "0.3", "fromUnit": "%", "fromValue": "0" }, "animationId": "gxztr34w9", "triggerType": "click" }] }</script>
     <script
@@ -634,19 +724,6 @@
     <script>window.logMonthlyVisits = true</script>
     <script>window.locale = "en"</script>
     <script src="js/generated.js"></script>
-    <!-- Toastr JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <!-- Start of LiveChat (www.livechat.com) code -->
-    <script>
-        window.__lc = window.__lc || {};
-        window.__lc.license = 18359862;
-        window.__lc.integration_name = "manual_onboarding";
-        window.__lc.product_name = "livechat";
-        ; (function (n, t, c) { function i(n) { return e._h ? e._h.apply(null, n) : e._q.push(n) } var e = { _q: [], _h: null, _v: "2.0", on: function () { i(["on", c.call(arguments)]) }, once: function () { i(["once", c.call(arguments)]) }, off: function () { i(["off", c.call(arguments)]) }, get: function () { if (!e._h) throw new Error("[LiveChatWidget] You can't use getters before load."); return i(["get", c.call(arguments)]) }, call: function () { i(["call", c.call(arguments)]) }, init: function () { var n = t.createElement("script"); n.async = !0, n.type = "text/javascript", n.src = "https://cdn.livechatinc.com/tracking.js", t.head.appendChild(n) } }; !n.__lc.asyncInit && e.init(), n.LiveChatWidget = n.LiveChatWidget || e }(window, document, [].slice))
-    </script>
-    <noscript><a href="https://www.livechat.com/chat-with/18359862/" rel="nofollow">Chat with us</a>, powered by <a
-            href="https://www.livechat.com/?welcome" rel="noopener nofollow" target="_blank">LiveChat</a></noscript>
-    <!-- End of LiveChat code -->
 
 </body>
 

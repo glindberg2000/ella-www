@@ -1,8 +1,8 @@
 import logging
-from logging.handlers import RotatingFileHandler
-from fastapi import FastAPI, Form, Request
+from fastapi import FastAPI, Form, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import EmailStr
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -10,27 +10,26 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv('/home/plato/dev/ella_www/sendgrid.env')
+load_dotenv('/home/plato/dev/ella_www/.env')
 
-# Enhanced logging setup
-logging.basicConfig(level=logging.INFO)
+# Minimal logging setup - console only
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
 logger = logging.getLogger("ella_app")
 
-# Add file handler
-file_handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=3)
-file_handler.setLevel(logging.INFO)
-file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-file_handler.setFormatter(file_formatter)
-logger.addHandler(file_handler)
-
-# Add console handler
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-console_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-console_handler.setFormatter(console_formatter)
-logger.addHandler(console_handler)
-
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace with your actual domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Health check endpoint
 @app.get("/api/health")
@@ -50,7 +49,10 @@ async def send_email(name: str = Form(...), email: EmailStr = Form(...), message
     SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
     if not SENDGRID_API_KEY:
         logger.error("SendGrid API key not found in environment variables")
-        return JSONResponse({"message": "SendGrid API key not configured"}, status_code=500)
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Email service not configured"}
+        )
     
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
@@ -66,15 +68,16 @@ async def send_email(name: str = Form(...), email: EmailStr = Form(...), message
             """
         )
         response = sg.send(mail)
-        logger.info(f"Email sent successfully. Status code: {response.status_code}")
-        return JSONResponse({"message": "Email sent successfully"})
+        return JSONResponse(
+            status_code=200,
+            content={"message": "Message sent successfully! We'll get back to you soon."}
+        )
     except Exception as e:
         logger.error(f"Failed to send email: {str(e)}")
-        return JSONResponse({"message": f"Failed to send email: {str(e)}"}, status_code=500)
-
-# Import and include the ChatGPT router
-from robloxgpt_bak import router as chatgpt_router
-app.include_router(chatgpt_router)
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Failed to send message. Please try again."}
+        )
 
 # Serve static files from the 'ella_www' directory after defining API routes
 app.mount("/", StaticFiles(directory="/home/plato/dev/ella_www", html=True), name="static")
